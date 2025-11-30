@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +11,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Courses from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
 import Users from "./pages/Users";
 import Profile from "./pages/Profile";
 import Assignments from "./pages/Assignments";
@@ -19,29 +19,17 @@ import Attendance from "./pages/Attendance";
 import Announcements from "./pages/Announcements";
 import Enrollments from "./pages/Enrollments";
 import NotFound from "./pages/NotFound";
-import CourseApprovals from "./pages/CourseApprovals";
-import CourseDetail from "./pages/CourseDetail";
+
 const queryClient = new QueryClient();
 
-const Layout = ({ children, darkMode, toggleDarkMode }: any) => (
-  <div className={darkMode ? "dark" : ""}>
-    <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+const Layout = ({ children }: any) => (
+  <div>
+    <Navbar />
     <main className="min-h-[calc(100vh-4rem)]">{children}</main>
   </div>
 );
 
 const App = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  
-  useEffect(() => {
-    const saved = localStorage.getItem("darkMode");
-    if (saved) setDarkMode(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("darkMode", JSON.stringify(darkMode));
-  }, [darkMode]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -55,7 +43,7 @@ const App = () => {
                 path="/"
                 element={
                   <ProtectedRoute>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Home />
                     </Layout>
                   </ProtectedRoute>
@@ -65,7 +53,7 @@ const App = () => {
                 path="/dashboard"
                 element={
                   <ProtectedRoute>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Dashboard />
                     </Layout>
                   </ProtectedRoute>
@@ -75,7 +63,7 @@ const App = () => {
                 path="/admin"
                 element={
                   <ProtectedRoute allowedRoles={['admin']}>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Admin />
                     </Layout>
                   </ProtectedRoute>
@@ -85,8 +73,18 @@ const App = () => {
                 path="/courses"
                 element={
                   <ProtectedRoute>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Courses />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/courses/:id"
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <CourseDetail />
                     </Layout>
                   </ProtectedRoute>
                 }
@@ -95,7 +93,7 @@ const App = () => {
                 path="/users"
                 element={
                   <ProtectedRoute allowedRoles={['admin']}>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Users />
                     </Layout>
                   </ProtectedRoute>
@@ -105,7 +103,7 @@ const App = () => {
                 path="/profile"
                 element={
                   <ProtectedRoute>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Profile />
                     </Layout>
                   </ProtectedRoute>
@@ -115,7 +113,7 @@ const App = () => {
                 path="/assignments"
                 element={
                   <ProtectedRoute>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Assignments />
                     </Layout>
                   </ProtectedRoute>
@@ -125,7 +123,7 @@ const App = () => {
                 path="/attendance"
                 element={
                   <ProtectedRoute>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Attendance />
                     </Layout>
                   </ProtectedRoute>
@@ -135,7 +133,7 @@ const App = () => {
                 path="/announcements"
                 element={
                   <ProtectedRoute>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Announcements />
                     </Layout>
                   </ProtectedRoute>
@@ -145,33 +143,14 @@ const App = () => {
                 path="/enrollments"
                 element={
                   <ProtectedRoute allowedRoles={['admin', 'lecturer']}>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                    <Layout>
                       <Enrollments />
                     </Layout>
                   </ProtectedRoute>
                 }
               />
               <Route path="*" element={<NotFound />} />
-            <Route
-                path="/admin/approvals"
-                element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
-                      <CourseApprovals />
-                    </Layout>
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/courses/:id"
-                element={
-                  <ProtectedRoute>
-                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
-                      <CourseDetail />
-                    </Layout>
-                  </ProtectedRoute>
-                }
-              />
+            </Routes>
           </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>

@@ -25,7 +25,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (data: Partial<Profile>) => Promise<void>;
-  changePassword: (newPassword: string) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -156,8 +156,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const changePassword = async (newPassword: string) => {
+  const changePassword = async (currentPassword: string, newPassword: string) => {
     try {
+      if (!user?.email) {
+        throw new Error('Không tìm thấy email người dùng');
+      }
+
+      // Re-authenticate with current password
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: currentPassword
+      });
+
+      if (authError) throw authError;
+
       const { error } = await supabase.auth.updateUser({
         password: newPassword
       });

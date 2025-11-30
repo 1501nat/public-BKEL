@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Moon, Sun, User, LogOut, Settings, Menu, X } from 'lucide-react';
+import { User, LogOut, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,12 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import logo from '@/assets/logo.png';
 
-interface NavbarProps {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-}
-
-export const Navbar = ({ darkMode, toggleDarkMode }: NavbarProps) => {
+export const Navbar = () => {
   const { profile, role, signOut } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,9 +24,9 @@ export const Navbar = ({ darkMode, toggleDarkMode }: NavbarProps) => {
     { path: '/dashboard', label: 'Bảng điều khiển', roles: ['admin', 'lecturer', 'student'] },
     { path: '/courses', label: 'Khóa học', roles: ['admin', 'lecturer', 'student'] },
     { path: '/assignments', label: 'Bài tập', roles: ['admin', 'lecturer', 'student'] },
-    { path: '/attendance', label: 'Điểm danh', roles: ['admin', 'lecturer', 'student'] },
+    { path: '/attendance', label: 'Điểm danh', roles: ['lecturer', 'student'] },
     { path: '/announcements', label: 'Thông báo', roles: ['admin', 'lecturer', 'student'] },
-    { path: '/enrollments', label: 'Ghi danh', roles: ['admin', 'lecturer'] },
+    { path: '/enrollments', label: 'Ghi danh', roles: ['lecturer'] },
     { path: '/users', label: 'Người dùng', roles: ['admin'] },
     { path: '/admin', label: 'Tạo tài khoản', roles: ['admin'] },
   ];
@@ -45,9 +40,9 @@ export const Navbar = ({ darkMode, toggleDarkMode }: NavbarProps) => {
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="HCMUT" className="h-10 w-30" />
+            <img src={logo} alt="HCMUT" className="h-10 w-10" />
             <span className="font-bold text-lg text-foreground hidden sm:inline">
-              
+              HCMUT LMS
             </span>
           </Link>
           
@@ -71,15 +66,6 @@ export const Navbar = ({ darkMode, toggleDarkMode }: NavbarProps) => {
 
         {/* Right Section */}
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleDarkMode}
-            className="rounded-full"
-          >
-            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
-
           {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -105,12 +91,6 @@ export const Navbar = ({ darkMode, toggleDarkMode }: NavbarProps) => {
                 <Link to="/profile" className="cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
                   Thông tin cá nhân
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/settings" className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Cài đặt
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
