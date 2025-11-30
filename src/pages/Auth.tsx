@@ -57,7 +57,7 @@ const Auth = () => {
         <Card className="w-full max-w-md shadow-hover">
           <CardHeader className="text-center space-y-4">
             <div className="flex justify-center">
-              <img src={logo} alt="HCMUT Logo" className="h-20 w-50" />
+              <img src={logo} alt="HCMUT Logo" className="h-20 w-20" />
             </div>
             <div>
               <CardTitle className="text-2xl">Đăng nhập</CardTitle>
