@@ -19,7 +19,8 @@ import Attendance from "./pages/Attendance";
 import Announcements from "./pages/Announcements";
 import Enrollments from "./pages/Enrollments";
 import NotFound from "./pages/NotFound";
-
+import CourseApprovals from "./pages/CourseApprovals";
+import CourseDetail from "./pages/CourseDetail";
 const queryClient = new QueryClient();
 
 const Layout = ({ children, darkMode, toggleDarkMode }: any) => (
@@ -151,7 +152,26 @@ const App = () => {
                 }
               />
               <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Route
+                path="/admin/approvals"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                      <CourseApprovals />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/courses/:id"
+                element={
+                  <ProtectedRoute>
+                    <Layout darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)}>
+                      <CourseDetail />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
           </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
